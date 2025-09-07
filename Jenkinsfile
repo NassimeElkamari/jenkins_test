@@ -5,7 +5,7 @@ pipeline {
         stage('Clone and Setup') {
             steps {
                 git branch: 'main', 
-                url: 'https://github.com/YOUR_USERNAME/my-simple-react-app.git',
+                url: 'https://github.com/NassimeElkamari/jenkins_test.git',
                 credentialsId: 'github-credentials-id'
                 
                 sh 'npm install'
