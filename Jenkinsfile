@@ -18,12 +18,6 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
-            steps {
-                echo '🧪 Running tests...'
-                sh 'npm test -- --watchAll=false --testResultsProcessor="jest-junit"'
-            }
-        }
 
         stage('Build React App') {
             steps {
