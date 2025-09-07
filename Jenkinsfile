@@ -74,6 +74,11 @@ pipeline {
         echo '🐳 Docker version: http://your-jenkins-server-ip:3001'
         echo '✅ Tests passed, build created, and deployed!'
         
+        emailext(
+                to: 'nassimeelkamari2002@gmail.com',
+                subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                body: "Good news 🎉\n\nThe build was successful!\n\nCheck details: ${env.BUILD_URL}"
+            )
         // You can add email or Slack notifications here later
     }
     
@@ -82,6 +87,11 @@ pipeline {
         echo '🔍 Check the console output for errors'
         echo '💡 Common issues: test failures, build errors, or port conflicts'
         
+        emailext(
+                to: 'nassimeelkamari2002@gmail.com',
+                subject: "FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                body: "Oops ❌\n\nThe build failed!\n\nCheck logs: ${env.BUILD_URL}"
+            )
         // You can add failure notifications here
     }
     
