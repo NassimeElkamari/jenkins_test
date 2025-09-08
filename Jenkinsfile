@@ -41,18 +41,6 @@ pipeline {
             }
         }
 
-        stage('Docker Push') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerHub_cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh '''
-                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                        docker tag my-react-app:latest $DOCKER_USER/my-react-app:latest
-                        docker push $DOCKER_USER/my-react-app:latest
-                    '''
-                }
-            }
-        }
-
         // NEW STAGE: Docker Run
         stage('Docker Run') {
             steps {
@@ -86,24 +74,15 @@ pipeline {
         echo '🐳 Docker version: http://your-jenkins-server-ip:3001'
         echo '✅ Tests passed, build created, and deployed!'
         
-        emailext(
-                to: 'nassimeelkamari2002@gmail.com',
-                subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-                body: "Good news 🎉\n\nThe build was successful!\n\nCheck details: ${env.BUILD_URL}"
-            )
-        // You can add email or Slack notifications here later
+
     }
     
     failure {
         echo '❌ FAILURE: Pipeline failed!'
         echo '🔍 Check the console output for errors'
         echo '💡 Common issues: test failures, build errors, or port conflicts'
-        
-        emailext(
-                to: 'nassimeelkamari2002@gmail.com',
-                subject: "FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-                body: "Oops ❌\n\nThe build failed!\n\nCheck logs: ${env.BUILD_URL}"
-            )
+        echo '💡 Common issues: test failures, build errors, or port conflicts'
+        echo '💡 Common issues: test failures, build errors, or port conflicts'
         // You can add failure notifications here
     }
     
