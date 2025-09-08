@@ -15,7 +15,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React with Nassime Al ostora hh
+          Learn React with Nassime Elkamari
         </a>
       </header>
     </div>
