@@ -45,23 +45,6 @@ pipeline {
             }
         }
 
-        stage('Docker Run') {
-            steps {
-                echo '🚀 Running Docker container...'
-                script {
-                    // Stop and remove existing container if exists
-                    bat "docker stop %DOCKER_CONTAINER% || echo Container not running"
-                    bat "docker rm %DOCKER_CONTAINER% || echo Container not existing"
-
-                    // Run container
-                    bat "docker run -d -p %DOCKER_PORT%:80 --name %DOCKER_CONTAINER% %DOCKER_IMAGE%:latest"
-
-                    // Wait and test
-                    bat "timeout /t 5"
-                    bat "curl -s http://localhost:%DOCKER_PORT% | findstr React || echo Docker container starting..."
-                }
-            }
-        }
     }
 
     post {
