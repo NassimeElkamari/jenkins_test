@@ -1,94 +1,89 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_IMAGE = 'my-react-app'
+        DOCKER_CONTAINER = 'react-app'
+        DOCKER_PORT = '3001'
+    }
+
     stages {
         stage('Clone Repository') {
             steps {
                 echo '🚀 Cloning React app repository...'
                 git branch: 'main', 
-                url: 'https://github.com/NassimeElkamari/jenkins_test.git',
-                credentialsId: 'github-credentials-id'
+                    url: 'https://github.com/NassimeElkamari/jenkins_test.git',
+                    credentialsId: 'github-credentials-id'
             }
         }
 
         stage('Install Dependencies') {
             steps {
                 echo '📦 Installing npm dependencies...'
-                sh 'npm install'
+                bat 'npm install'
             }
         }
-
 
         stage('Build React App') {
             steps {
                 echo '🏗️ Building React app...'
-                sh 'npm run build'
+                bat 'npm run build'
             }
         }
 
         stage('Test Build') {
             steps {
                 echo '✅ Build completed successfully!'
-                sh 'ls -la build/'
+                bat 'dir build'
             }
         }
 
-        // NEW STAGE: Docker Build
         stage('Docker Build') {
             steps {
                 echo '🐳 Building Docker image...'
-                sh 'docker build -t my-react-app:latest .'
+                bat "docker build -t %DOCKER_IMAGE%:latest ."
             }
         }
 
-        // NEW STAGE: Docker Run
         stage('Docker Run') {
             steps {
                 echo '🚀 Running Docker container...'
                 script {
-                    // Stop and remove any existing container
-                    sh 'docker stop react-app || true'
-                    sh 'docker rm react-app || true'
-                    
-                    // Run new container
-                    sh 'docker run -d -p 3001:80 --name react-app my-react-app:latest'
-                    
+                    // Stop and remove existing container if exists
+                    bat "docker stop %DOCKER_CONTAINER% || echo Container not running"
+                    bat "docker rm %DOCKER_CONTAINER% || echo Container not existing"
+
+                    // Run container
+                    bat "docker run -d -p %DOCKER_PORT%:80 --name %DOCKER_CONTAINER% %DOCKER_IMAGE%:latest"
+
                     // Wait and test
-                    sh 'sleep 3'
-                    sh 'curl -s http://localhost:3001 | grep "React" || echo "Docker container starting..."'
+                    bat "timeout /t 5"
+                    bat "curl -s http://localhost:%DOCKER_PORT% | findstr React || echo Docker container starting..."
                 }
             }
         }
     }
 
     post {
-    always {
-        echo '📊 Pipeline completed. Cleaning up...'
-        // Clean up serve process
-        sh 'pkill -f "serve -s build" || true'
-    }
-    
-    success {
-        echo '🎉 SUCCESS: Pipeline completed successfully!'
-        echo '🌐 Serve version: http://your-jenkins-server-ip:3000'
-        echo '🐳 Docker version: http://your-jenkins-server-ip:3001'
-        echo '✅ Tests passed, build created, and deployed!'
+        always {
+            echo '📊 Pipeline completed. Cleaning up...'
+            // Optional cleanup
+            bat "docker stop %DOCKER_CONTAINER% || echo Container not running"
+            bat "docker rm %DOCKER_CONTAINER% || echo Container not existing"
+        }
         
-
+        success {
+            echo '🎉 SUCCESS: Pipeline completed successfully!'
+            echo "🌐 React app running at http://localhost:%DOCKER_PORT%"
+        }
+        
+        failure {
+            echo '❌ FAILURE: Pipeline failed!'
+            echo '🔍 Check console output for errors'
+        }
+        
+        unstable {
+            echo '⚠️ UNSTABLE: Pipeline completed but with warnings'
+        }
     }
-    
-    failure {
-        echo '❌ FAILURE: Pipeline failed!'
-        echo '🔍 Check the console output for errors'
-        echo '💡 Common issues: test failures, build errors, or port conflicts'
-        echo '💡 Common issues: test failures, build errors, or port conflicts'
-        echo '💡 Common issues: test failures, build errors, or port conflicts'
-        // You can add failure notifications here
-    }
-    
-    unstable {
-        echo '⚠️  UNSTABLE: Pipeline completed but with warnings'
-        echo '📝 Check test results or build warnings'
-    }
-}
 }
