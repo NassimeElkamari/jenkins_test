@@ -50,14 +50,10 @@ pipeline {
     post {
         always {
             echo '📊 Pipeline completed. Cleaning up...'
-            // Optional cleanup
-            bat "docker stop %DOCKER_CONTAINER% || echo Container not running"
-            bat "docker rm %DOCKER_CONTAINER% || echo Container not existing"
         }
         
         success {
             echo '🎉 SUCCESS: Pipeline completed successfully!'
-            echo "🌐 React app running at http://localhost:%DOCKER_PORT%"
         }
         
         failure {
