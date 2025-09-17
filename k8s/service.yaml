@@ -9,4 +9,4 @@ spec:
   ports:
     - port: 80          # Service port
       targetPort: 80    # Container port
-      nodePort: 30001   # External port for access
+      nodePort: 30101   # External port for access

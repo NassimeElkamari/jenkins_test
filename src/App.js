@@ -15,7 +15,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React with Nassime Elkamari
+          Learn React and kubernetes with Nassime Elkamari
         </a>
       </header>
     </div>
