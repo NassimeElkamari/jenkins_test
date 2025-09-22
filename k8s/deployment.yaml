@@ -17,3 +17,5 @@ spec:
         image: my-dockerhub-username/my-react-app:latest  
         ports:
         - containerPort: 80
+        imagePullPolicy: Always
+
