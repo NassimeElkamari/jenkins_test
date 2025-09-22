@@ -15,7 +15,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React and kubernetes with Nassime Elkamari , today is 22/09/2025
+          Learn React and kubernetes with Nassime Elkamari , today is 22/09/2025 , and the time is 10:00 AM
         </a>
       </header>
     </div>
